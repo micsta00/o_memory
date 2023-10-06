@@ -1,0 +1,21 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.App {
+  font-family: sans-serif;
+  text-align: left;
+}
+
+h2 {
+  font-size: 1.2em;
+}
