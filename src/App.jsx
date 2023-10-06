@@ -1,35 +1,35 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./styles.css";
 import Tile from "./Tile";
-import Stopwatch from "./Stopwatch";
 
 export default function App() {
-  const SIZE = 4;
-  const [isEnd, setIsEnd] = useState(false);
-  const [picked, setPicked] = useState([]);
-  const [numOfFlipped, setNumOfFlipped] = useState(0);
-  const [points, setPoints] = useState(0);
+  const SIZE = 4
+  const [isEnd, setIsEnd] = useState(false)
+  const [picked, setPicked] = useState([])
+  const [numOfFlipped, setNumOfFlipped] = useState(0)
+  const [points, setPoints] = useState(0)
 
   //stopwatch
-  const [time, setTime] = useState(0);
-  const [running, setRunning] = useState(false);
+  const [time, setTime] = useState(0)
+  const [running, setRunning] = useState(false)
   useEffect(() => {
-    let interval;
+    let interval
     if (running) {
       interval = setInterval(() => {
-        setTime((prevTime) => prevTime + 10);
-      }, 10);
+        setTime((prevTime) => prevTime + 10)
+      }, 10)
     } else if (!running) {
-      clearInterval(interval);
+      clearInterval(interval)
     }
-    return () => clearInterval(interval);
-  }, [running]);
+    return () => clearInterval(interval)
+  }, [running])
   //end stopwatch
+
   useEffect(() => {
-    setRunning(true);
-  }, []);
+    setRunning(true)
+  }, [])
   const [memoryBox, setMemoryBox] = useState(() => {
-    const box = [];
+    const box = []
     for (let i = 0; i < SIZE ** 2 / 2; i++) {
       for (let k = 0; k < 2; k++) {
         box.push({
@@ -38,69 +38,69 @@ export default function App() {
           id: 0,
           havePare: false,
           isClickable: true
-        });
+        })
       }
     }
     const shuffledBox = box.sort((a, b) => 0.5 - Math.random());
 
     return shuffledBox.map((item, ind) => {
-      return { ...item, id: ind };
+      return { ...item, id: ind }
     });
   });
 
-  const reveal = function (id) {
+  function reveal(id) {
     setMemoryBox((prevMemBox) =>
       prevMemBox.map((tile) => {
         return tile.id === id
           ? { ...tile, isFlipped: !tile.isFlipped, isClickable: false }
-          : tile;
+          : tile
       })
-    );
-  };
+    )
+  }
 
-  const clearUnmatchTiles = function (id) {
+  function clearUnmatchTiles(id) {
     setMemoryBox((prevMemBox) =>
       prevMemBox.map((tile) => {
         return { ...tile, isFlipped: false, isClickable: true };
       })
-    );
-  };
+    )
+  }
 
-  const assignPare = function (prevId, id) {
+  function assignPare(prevId, id) {
     setMemoryBox((prevMemBox) =>
       prevMemBox.map((tile) => {
         return tile.id === id || tile.id === prevId
           ? { ...tile, havePare: true, isClickable: false }
-          : tile;
+          : tile
       })
-    );
-  };
+    )
+  }
 
-  const counter = function (id, value) {
+  function counter(id, value) {
     if (numOfFlipped === 0) {
-      clearUnmatchTiles();
-      reveal(id);
-      setNumOfFlipped(1);
+      clearUnmatchTiles()
+      reveal(id)
+      setNumOfFlipped(1)
       setPicked([{ value: value, id: id }]);
     } else if (numOfFlipped === 1) {
-      reveal(id);
+      reveal(id)
       if (picked.length === 1) {
         if (picked[0].value === value && picked[0].id != id) {
-          assignPare(picked[0].id, id);
-          setPoints((prevPoints) => prevPoints + 1);
+          assignPare(picked[0].id, id)
+          setPoints((prevPoints) => prevPoints + 1)
         }
-        setNumOfFlipped(0);
+        setNumOfFlipped(0)
       }
-      setNumOfFlipped(0);
+      setNumOfFlipped(0)
     }
   };
 
   useEffect(() => {
     if (points === SIZE ** 2 / 2) {
-      setRunning(false);
-      setIsEnd(true);
+      setRunning(false)
+      setIsEnd(true)
     }
-  }, [points]);
+  }, [points])
 
   return (
     <div className="App">
@@ -135,9 +135,9 @@ export default function App() {
               havePare={el.havePare}
               isClickable={el.isClickable}
             />
-          );
+          )
         })}
       </div>
     </div>
-  );
+  )
 }
